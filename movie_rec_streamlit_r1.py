@@ -47,7 +47,7 @@ if st.session_state.genre_selected:
         st.write("Note: Leaving a rating at 0 means you don't want to rate it.")
 
         # Create two columns: one for movie titles and one for sliders
-        for _, row in movies_to_rate.head(50).iterrows():
+        for _, row in movies_to_rate.head(5).iterrows():
             movie_id = row["Movie ID"]
             movie_title = row["Movie Title"]
             col1, col2 = st.columns([3, 1])  # Adjust the column width ratio as needed
@@ -164,10 +164,10 @@ if st.session_state.genre_selected:
         
         # Define ratings for a new user to be used for recommendations
         
-        new_user_ratings = {
-            'movieId': [4896, 5816, 8368, 40815, 54001, 69844, 318], # Harry Potter Movies
-            'rating': [5, 5, 5, 5, 5, 5, 0]
-        }
+        # new_user_ratings = {
+        #     'movieId': [4896, 5816, 8368, 40815, 54001, 69844, 318], # Harry Potter Movies
+        #     'rating': [5, 5, 5, 5, 5, 5, 0]
+        # }
         
         # Convert the new user ratings to a DataFrame
         df_new_user_ratings = pd.DataFrame(new_user_ratings)

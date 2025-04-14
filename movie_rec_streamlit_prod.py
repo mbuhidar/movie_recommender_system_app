@@ -30,7 +30,7 @@ if genre_submit_button:
 # Step 4: Only display the ratings form if a genre is selected
 if st.session_state.genre_selected:
     # Load the movie data file
-    df_movies = pd.read_csv('Sandbox/MovieLens/ml-latest-small/movies.csv')
+    df_movies = pd.read_csv('movies.csv')
 
     # Filter movies by selected genre
     movies_list = df_movies[df_movies['genres'].str.contains(st.session_state.selected_genre, case=False, na=False)]
@@ -181,7 +181,7 @@ if st.session_state.genre_selected:
     
         ###################
         # Load the MovieLens movies dataset
-        df_movies = pd.read_csv('Sandbox/MovieLens/ml-latest-small/movies.csv')
+        df_movies = pd.read_csv('movies.csv')
         ###################
       
         # Load the model and label encoders for users and movies

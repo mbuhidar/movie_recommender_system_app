@@ -307,6 +307,27 @@ if st.session_state.genre_selected:
         pd.set_option('display.float_format', lambda x: '%.1f' % x) # Set float format to 1 decimal places
         
         # Display the top-k recommended movies
-        st.write("Top 10 Recommended Movies:")
+        # st.write("Top 10 Recommended Movies:")
         # st.write(df_recommendations[['title', 'predicted_rating']].head(10).to_string(index=False))
-        st.dataframe(df_recommendations[['title', 'predicted_rating']].head(10), use_container_width=True)
+        # st.dataframe(df_recommendations[['title', 'predicted_rating']].head(10), use_container_width=True)
+
+        # Add custom CSS for table styling
+        st.markdown("""
+        <style>
+            /* Center the column headers */
+            .stDataFrame th {
+                text-align: center !important;
+            }
+
+            /* Center the predicted rating values */
+            .stDataFrame td:nth-child(2) {
+                text-align: center !important;
+            }
+        </style>
+        """, unsafe_allow_html=True)
+
+        # Display the dataframe with custom column names and styling
+        st.write("Top 10 Recommended Movies:")
+        df_display = df_recommendations[['title', 'predicted_rating']].head(10).copy()
+        df_display.columns = ['Movie Title', 'Rating']  # Rename columns for display
+        st.dataframe(df_display, use_container_width=True)

@@ -341,4 +341,4 @@ if st.session_state.genre_selected:
         st.write("Top 10 Recommended Movies:")
         df_display = df_recommendations[['title', 'predicted_rating']].head(10).copy()
         df_display.columns = ['Movie Title', 'Rating']  # Rename columns for display
-        st.dataframe(df_display, use_container_width=True, index=False)
+        st.dataframe(df_display, use_container_width=True, include_index=False)

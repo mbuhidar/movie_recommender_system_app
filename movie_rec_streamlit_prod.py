@@ -315,13 +315,24 @@ if st.session_state.genre_selected:
         st.markdown("""
         <style>
             /* Center the column headers */
-            .stDataFrame th {
+            [data-testid="stDataFrame"] th {
                 text-align: center !important;
             }
 
             /* Center the predicted rating values */
-            .stDataFrame td:nth-child(2) {
+            [data-testid="stDataFrame"] td:nth-child(2) {
                 text-align: center !important;
+            }
+
+            /* Add some padding and borders */
+            [data-testid="stDataFrame"] table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            [data-testid="stDataFrame"] td, [data-testid="stDataFrame"] th {
+                padding: 8px;
+                border: 1px solid #ddd;
             }
         </style>
         """, unsafe_allow_html=True)

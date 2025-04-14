@@ -181,7 +181,7 @@ if st.session_state.genre_selected:
     
         ###################
         # Load the MovieLens movies dataset
-        df_movies = pd.read_csv('movies.csv')
+        # df_movies = pd.read_csv('movies.csv')
         ###################
       
         # Load the model and label encoders for users and movies
@@ -243,7 +243,6 @@ if st.session_state.genre_selected:
         
         # Convert the new user ratings to a DataFrame
         df_new_user_ratings = pd.DataFrame(new_user_ratings)
-        df_new_user_ratings
         
         # Encode the movie IDs using the loaded label encoder
         df_new_user_ratings['movieId'] = lbl_movie_loaded.transform(df_new_user_ratings['movieId'])

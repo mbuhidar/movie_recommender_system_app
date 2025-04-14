@@ -144,8 +144,8 @@ if st.session_state.genre_selected:
         }
 
         # Display the collected ratings
-        st.write("Your Ratings:")
-        st.write(filtered_ratings)
+        # st.write("Your Ratings:")
+        # st.write(filtered_ratings)
 
         # Convert filtered_ratings to the desired format
         new_user_ratings = {
@@ -154,10 +154,10 @@ if st.session_state.genre_selected:
         }
 
         # Display the collected ratings
-        st.write("Your Ratings:")
-        st.write(new_user_ratings)
-        print("Your Ratings:")
-        print(new_user_ratings)
+        # st.write("Your Ratings:")
+        # st.write(new_user_ratings)
+        # print("Your Ratings:")
+        # print(new_user_ratings)
 
 # Inference and recommendation
 

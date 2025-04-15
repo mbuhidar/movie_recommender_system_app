@@ -63,12 +63,12 @@ if st.session_state.genre_selected:
             .movie-title {
                 word-wrap: break-word;
                 white-space: normal;
-                line-height: 1.2;
+                line-height: 1.0;
                 padding-right: 1rem;
                 margin: 0;
                 display: flex;
                 align-items: center;
-                min-height: 2.5rem;
+                min-height: 1.5rem;
             }
 
             /* Remove column padding */
@@ -79,8 +79,8 @@ if st.session_state.genre_selected:
 
             /* Adjust vertical block spacing */
             div[data-testid="stVerticalBlock"] > div {
-                padding-top: 0.1 rem;
-                padding-bottom: 0.1 rem;
+                padding-top: 0.05 rem;
+                padding-bottom: 0.05 rem;
             }
         </style>
         """, unsafe_allow_html=True)

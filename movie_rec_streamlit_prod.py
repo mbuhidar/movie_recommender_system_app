@@ -105,7 +105,7 @@ if st.session_state.genre_selected:
         for _, row in movies_to_rate.iloc[start_idx:end_idx].iterrows():
             movie_id = row["Movie ID"]
             movie_title = row["Movie Title"]
-            col1, col2 = st.columns([2, 3])
+            col1, col2 = st.columns([4, 6])
 
             with col1:
                 st.markdown(f'<div class="movie-title">{movie_title}</div>', unsafe_allow_html=True)
@@ -121,7 +121,7 @@ if st.session_state.genre_selected:
                 )
 
         # Create pagination controls
-        col1, col2, col3 = st.columns([1, 2, 1])
+        col1, col2, col3 = st.columns([2, 4, 2])
         with col1:
             if st.form_submit_button("Previous") and st.session_state.page_number > 0:
                 st.session_state.page_number -= 1

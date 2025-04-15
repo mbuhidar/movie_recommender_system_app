@@ -26,6 +26,8 @@ with st.form(key='genre_form'):
 if genre_submit_button:
     st.session_state.genre_selected = True
     st.session_state.selected_genre = genre
+    st.session_state.page_number = 0
+    st.session_state.ratings = {}
 
 # Step 4: Only display the ratings form if a genre is selected
 if st.session_state.genre_selected:

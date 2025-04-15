@@ -79,8 +79,8 @@ if st.session_state.genre_selected:
 
             /* Adjust vertical block spacing */
             div[data-testid="stVerticalBlock"] > div {
-                padding-top: 0.25rem;
-                padding-bottom: 0.25rem;
+                padding-top: 0.1 rem;
+                padding-bottom: 0.1 rem;
             }
         </style>
         """, unsafe_allow_html=True)

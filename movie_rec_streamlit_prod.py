@@ -308,61 +308,6 @@ if st.session_state.genre_selected:
         pd.set_option('display.max_columns', None)
         pd.set_option('display.float_format', lambda x: '%.1f' % x) # Set float format to 1 decimal places
         
-        #st.markdown("""
-        #<style>
-        #    /* Style the table container */
-        #    [data-testid="stDataFrame"] {
-        #        width: 100%;
-        #        font-family: Arial, sans-serif;
-        #        font-size: 16px;  /* Base font size for the table */
-        #        margin: 1rem 0;
-        #    }
-#
-        #    /* Style the headers with specific widths */
-        #    [data-testid="stDataFrame"] th:first-child {
-        #        width: 90% !important;
-        #        font-size: 18px;  /* Larger font for headers */
-        #    }
-#
-        #    [data-testid="stDataFrame"] th:last-child {
-        #        width: 10% !important;
-        #        font-size: 18px;  /* Larger font for headers */
-        #    }
-#
-        #    /* Style the cells */
-        #    [data-testid="stDataFrame"] td:first-child {
-        #        width: 90%;
-        #        padding: 8px;
-        #        font-size: 16px;  /* Font size for movie titles */
-        #    }
-#
-        #    [data-testid="stDataFrame"] td:last-child {
-        #        width: 10%;
-        #        text-align: center !important;
-        #        padding: 8px;
-        #        font-size: 16px;  /* Font size for ratings */
-        #    }
-#
-        #    /* Additional styling */
-        #    [data-testid="stDataFrame"] th {
-        #        background-color: #f0f2f6;
-        #        color: #0e1117;
-        #        font-weight: bold;
-        #        padding: 8px;
-        #        border: 1px solid #ddd;
-        #    }
-        #</style>
-        #""", unsafe_allow_html=True)
-        #
-        ## Display the dataframe with custom formatting
-        #st.write("### 🎬 Top 10 Recommended Movies")
-        #df_display = df_recommendations[['title', 'predicted_rating']].head(10).copy()
-        #df_display.columns = ['Movie Title', 'Rating']
-#
-        #df_display['Rating'] = df_display['Rating'].apply(lambda x: f"{x:.1f} ⭐")
-        #st.markdown(df_display.to_html(index=False), unsafe_allow_html=True)
-        ##st.table(df_display)
-
         st.markdown("""
         <style>
             /* Style the table container */
@@ -410,6 +355,8 @@ if st.session_state.genre_selected:
         st.write("### 🎬 Top 10 Recommended Movies")
         df_display = df_recommendations[['title', 'predicted_rating']].head(10).copy()
         df_display.columns = ['Movie Title', 'Rating']
+        df_display['Rating'] = df_display['Rating'].astype(float)
+        df_display['Rating'] = df_display['Rating'].clip(upper=5.0)  # Clip ratings to a maximum of 5.0
         df_display['Rating'] = df_display['Rating'].apply(lambda x: f"{x:.1f} ⭐")
 
         # Convert to HTML with full width table

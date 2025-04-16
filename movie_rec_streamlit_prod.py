@@ -16,24 +16,16 @@ if "genre_selected" not in st.session_state:
 with st.form(key='genre_form'):
     # Replace the two st.write statements with a single markdown
     st.markdown("""
-    ### What type of movie do you want to watch today?
-    <div style="margin-top: -1em;">Please select a genre:</div>
+    ### What type of movie would you like to watch?
+    <div style="margin-top: -1.0em; margin-bottom: -0.0em;">Please select a genre:</div>
     """, unsafe_allow_html=True)
 
     genre = st.selectbox("", [  # Empty label since we're showing the text above
         'Drama', 'Comedy', 'Thriller', 'Action', 'Romance', 'Adventure', 'Crime',
         'Sci-Fi', 'Horror', 'Fantasy', 'Children', 'Animation', 'Mystery',
-        'Documentary', 'War', 'Musical', 'Western', 'Film-Noir'
+        'Documentary', 'War', 'Musical', 'Western', 'Film-Noir', 'All Genres'
     ])
     genre_submit_button = st.form_submit_button(label='Submit Genre')
-
-
-    #st.write("What type of movie do you want to watch today?")
-    #genre = st.selectbox("Please select a genre:", [
-    #    'Drama', 'Comedy', 'Thriller', 'Action', 'Romance', 'Adventure', 'Crime',
-    #    'Sci-Fi', 'Horror', 'Fantasy', 'Children', 'Animation', 'Mystery',
-    #    'Documentary', 'War', 'Musical', 'Western', 'Film-Noir'
-    #])
 
 # Step 3: Process genre selection
 if genre_submit_button:
@@ -44,11 +36,19 @@ if genre_submit_button:
 
 # Step 4: Only display the ratings form if a genre is selected
 if st.session_state.genre_selected:
-    # Load the movie data file
+    # Load the movie and ratings data file
     df_movies = pd.read_csv('movies.csv')
-
+    df_ratings = pd.read_csv('ratings.csv')
     # Filter movies by selected genre
-    movies_list = df_movies[df_movies['genres'].str.contains(st.session_state.selected_genre, case=False, na=False)]
+    if st.session_state.selected_genre == 'All Genres':
+        movies_list = df_movies.copy()
+    else:
+        # Filter movies based on the selected genre
+        movies_list = df_movies[df_movies['genres'].str.contains(st.session_state.selected_genre, case=False, na=False)]
+    # Combine with ratings data to sort by number of ratings
+    movies_list = movies_list.merge(df_ratings.groupby('movieId').size().reset_index(name='num_ratings'), on='movieId', how='left')
+    # Sort by number of ratings in descending order
+    movies_list = movies_list.sort_values(by='num_ratings', ascending=False)
     movies_to_rate = movies_list[['movieId', 'title']].copy()
     movies_to_rate.rename(columns={"movieId": "Movie ID", "title": "Movie Title"}, inplace=True)
 
@@ -58,9 +58,14 @@ if st.session_state.genre_selected:
 
     # Ratings form
     with st.form(key='ratings_form'):
-        st.write(f"Please rate some of these {st.session_state.selected_genre} movies:")
-        st.write("Rate the movies from 1 to 10, where 1 means you don't like it at all and 10 means you love it!")
-        st.write("Note: Leaving a rating at 0 means you don't want to rate it.")
+        # Replace the three st.write statements with a single markdown
+        st.markdown(f"""
+        <div style='line-height: 1.5; margin-bottom: 1em;'>
+            <h4 style='margin: 0; padding: 0; margin-bottom: 0.5em;'>Please rate some of these "{st.session_state.selected_genre}" movies:</h4>
+            <p style='margin: 0; padding: 0;'>Rate the movies from 1 to 10, where 1 means you don't like it at all and 10 means you love it!</p>
+            <p style='margin: 0; padding: 0;'>Note: Leaving a rating at 0 means you don't want to include that movie in the ratings.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
         # Add custom CSS to handle text wrapping and alignment
         st.markdown("""
@@ -194,13 +199,6 @@ if st.session_state.genre_selected:
         # set device to cuda if available, otherwise use cpu
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
-        ###################
-        # Load the MovieLens movies dataset
-        # df_movies = pd.read_csv('movies.csv')
-        ###################
-      
-        # Load the model and label encoders for users and movies
-      
         # Load the model and label encoders from the trained model .pth file
         checkpoint = torch.load('models/movie_rec_sys_r1.pth', weights_only=False)
      
@@ -308,11 +306,15 @@ if st.session_state.genre_selected:
         df_recommendations = df_recommendations.sort_values(by='predicted_rating', ascending=False)
 
         # Convert predicted ratings to 1 decimal place
-        df_recommendations['predicted_rating'] = df_recommendations['predicted_rating'].astype(float)
-        df_recommendations['predicted_rating'] = df_recommendations['predicted_rating'].round(1)
+        # df_recommendations['predicted_rating'] = df_recommendations['predicted_rating'].astype(float)
+        # df_recommendations['predicted_rating'] = df_recommendations['predicted_rating'].round(1)
 
-        # Filter out movies that don't match the selected genre
-        df_recommendations = df_recommendations[df_recommendations['genres'].str.contains(st.session_state.selected_genre, case=False, na=False)]
+        # If the selected genre is 'All Genres', no need to filter by genre
+        if st.session_state.selected_genre == 'All Genres':
+            df_recommendations = df_recommendations.sort_values(by='predicted_rating', ascending=False)
+        else:
+            # Filter out movies that don't match the selected genre
+            df_recommendations = df_recommendations[df_recommendations['genres'].str.contains(st.session_state.selected_genre, case=False, na=False)]
         
         # Display the top K recommended movies
         
@@ -364,13 +366,22 @@ if st.session_state.genre_selected:
         </style>
         """, unsafe_allow_html=True)
 
+        # Get the size of the df_recommendations DataFrame
+        num_rows, num_cols = df_recommendations.shape
+        if num_rows > 10:
+            # Limit the display to the top 10 rows
+            df_recommendations = df_recommendations.head(10)
+            num_rows = 10
+        else:
+            # Display all rows if there are 10 or fewer
+            pass
         # Display the dataframe with custom formatting
-        st.write("### 🎬 Top 10 Recommended Movies")
-        df_display = df_recommendations[['title', 'predicted_rating']].head(10).copy()
-        df_display.columns = ['Movie Title', 'Rating']
-        df_display['Rating'] = df_display['Rating'].astype(float)
-        df_display['Rating'] = df_display['Rating'].clip(upper=5.0)  # Clip ratings to a maximum of 5.0
-        df_display['Rating'] = df_display['Rating'].apply(lambda x: f"{x:.1f} ⭐")
+        st.write(f"### 🎬 Top {num_rows} Recommended Movies")
+        df_display = df_recommendations[['title', 'predicted_rating']].copy()
+        df_display.columns = ['Movie Title', 'Your Predicted Rating']
+        df_display['Your Predicted Rating'] = df_display['Your Predicted Rating'].astype(float)
+        df_display['Your Predicted Rating'] = df_display['Your Predicted Rating'].clip(upper=5.0)  # Clip ratings to a maximum of 5.0
+        df_display['Your Predicted Rating'] = df_display['Your Predicted Rating'].apply(lambda x: f"{x * 2:.1f} ⭐")
 
         # Convert to HTML with full width table
         html_table = df_display.to_html(index=False, classes=['dataframe'])

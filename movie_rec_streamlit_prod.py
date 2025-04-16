@@ -439,13 +439,16 @@ if st.session_state.genre_selected:
         df_display = df_recommendations[['title', 'predicted_rating']].head(10).copy()
         df_display.columns = ['Movie Title', 'Rating']
 
-        # Format the rating values
         df_display['Rating'] = df_display['Rating'].apply(lambda x: f"{x:.1f} ⭐")
+        st.table(df_display)
 
-        # Display the styled dataframe
-        st.dataframe(
-            df_display,
-            use_container_width=True,
-            hide_index=True,
-            height=400
-        )
+        ## Format the rating values
+        #df_display['Rating'] = df_display['Rating'].apply(lambda x: f"{x:.1f} ⭐")
+#
+        ## Display the styled dataframe
+        #st.dataframe(
+        #    df_display,
+        #    use_container_width=True,
+        #    hide_index=True,
+        #    height=400
+        #)

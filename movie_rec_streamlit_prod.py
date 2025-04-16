@@ -346,7 +346,48 @@ if st.session_state.genre_selected:
         #st.dataframe(df_display, use_container_width=True, hide_index=True)
 
         # Add custom CSS for enhanced table styling
-        st.markdown("""
+        #st.markdown("""
+        #<style>
+        #    /* Style the table container */
+        #    [data-testid="stDataFrame"] {
+        #        width: 100%;
+        #        font-family: Arial, sans-serif;
+        #        margin: 1rem 0;
+        #    }
+#
+        #    /* Style the headers */
+        #    [data-testid="stDataFrame"] th {
+        #        text-align: center !important;
+        #        background-color: #f0f2f6;
+        #        color: #0e1117;
+        #        font-weight: bold;
+        #        padding: 12px 8px;
+        #        border: 1px solid #ddd;
+        #    }
+#
+        #    /* Style the cells */
+        #    [data-testid="stDataFrame"] td {
+        #        padding: 10px 8px;
+        #        border: 1px solid #ddd;
+        #    }
+#
+        #    /* Center rating column */
+        #    [data-testid="stDataFrame"] td:nth-child(2) {
+        #        text-align: center !important;
+        #    }
+#
+        #    /* Hover effect on rows */
+        #    [data-testid="stDataFrame"] tr:hover {
+        #        background-color: #f5f5f5;
+        #    }
+#
+        #    /* Alternating row colors */
+        #    [data-testid="stDataFrame"] tr:nth-child(even) {
+        #        background-color: #fafafa;
+        #    }
+        #</style>
+        #""", unsafe_allow_html=True)
+        #st.markdown("""
         <style>
             /* Style the table container */
             [data-testid="stDataFrame"] {
@@ -355,9 +396,27 @@ if st.session_state.genre_selected:
                 margin: 1rem 0;
             }
 
-            /* Style the headers */
-            [data-testid="stDataFrame"] th {
+            /* Style the headers with specific widths */
+            [data-testid="stDataFrame"] th:first-child {
+                width: 80% !important;  /* Movie title column width */
+            }
+
+            [data-testid="stDataFrame"] th:last-child {
+                width: 20% !important;  /* Rating column width */
+            }
+
+            /* Style the cells */
+            [data-testid="stDataFrame"] td:first-child {
+                width: 80%;  /* Movie title column width */
+            }
+
+            [data-testid="stDataFrame"] td:last-child {
+                width: 20%;  /* Rating column width */
                 text-align: center !important;
+            }
+
+            /* Rest of your existing styles */
+            [data-testid="stDataFrame"] th {
                 background-color: #f0f2f6;
                 color: #0e1117;
                 font-weight: bold;
@@ -365,23 +424,10 @@ if st.session_state.genre_selected:
                 border: 1px solid #ddd;
             }
 
-            /* Style the cells */
-            [data-testid="stDataFrame"] td {
-                padding: 10px 8px;
-                border: 1px solid #ddd;
-            }
-
-            /* Center rating column */
-            [data-testid="stDataFrame"] td:nth-child(2) {
-                text-align: center !important;
-            }
-
-            /* Hover effect on rows */
             [data-testid="stDataFrame"] tr:hover {
                 background-color: #f5f5f5;
             }
 
-            /* Alternating row colors */
             [data-testid="stDataFrame"] tr:nth-child(even) {
                 background-color: #fafafa;
             }

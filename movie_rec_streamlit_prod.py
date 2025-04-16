@@ -14,13 +14,26 @@ if "genre_selected" not in st.session_state:
 
 # Step 2: Genre selection form
 with st.form(key='genre_form'):
-    st.write("What type of movie do you want to watch today?")
-    genre = st.selectbox("Please select a genre:", [
+    # Replace the two st.write statements with a single markdown
+    st.markdown("""
+    ### What type of movie do you want to watch today?
+    <div style="margin-top: -1em;">Please select a genre:</div>
+    """, unsafe_allow_html=True)
+
+    genre = st.selectbox("", [  # Empty label since we're showing the text above
         'Drama', 'Comedy', 'Thriller', 'Action', 'Romance', 'Adventure', 'Crime',
         'Sci-Fi', 'Horror', 'Fantasy', 'Children', 'Animation', 'Mystery',
         'Documentary', 'War', 'Musical', 'Western', 'Film-Noir'
     ])
     genre_submit_button = st.form_submit_button(label='Submit Genre')
+
+
+    #st.write("What type of movie do you want to watch today?")
+    #genre = st.selectbox("Please select a genre:", [
+    #    'Drama', 'Comedy', 'Thriller', 'Action', 'Romance', 'Adventure', 'Crime',
+    #    'Sci-Fi', 'Horror', 'Fantasy', 'Children', 'Animation', 'Mystery',
+    #    'Documentary', 'War', 'Musical', 'Western', 'Film-Noir'
+    #])
 
 # Step 3: Process genre selection
 if genre_submit_button:

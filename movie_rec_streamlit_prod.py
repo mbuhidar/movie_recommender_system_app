@@ -440,7 +440,8 @@ if st.session_state.genre_selected:
         df_display.columns = ['Movie Title', 'Rating']
 
         df_display['Rating'] = df_display['Rating'].apply(lambda x: f"{x:.1f} ⭐")
-        st.table(df_display)
+        st.markdown(df_display.to_html(index=False), unsafe_allow_html=True)
+        #st.table(df_display)
 
         ## Format the rating values
         #df_display['Rating'] = df_display['Rating'].apply(lambda x: f"{x:.1f} ⭐")

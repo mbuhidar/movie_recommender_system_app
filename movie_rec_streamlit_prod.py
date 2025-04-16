@@ -399,21 +399,21 @@ if st.session_state.genre_selected:
 
             /* Style the headers with specific widths */
             [data-testid="stDataFrame"] th:first-child {
-                width: 80% !important;
+                width: 90% !important;
             }
 
             [data-testid="stDataFrame"] th:last-child {
-                width: 20% !important;
+                width: 10% !important;
             }
 
             /* Style the cells */
             [data-testid="stDataFrame"] td:first-child {
-                width: 80%;
+                width: 90%;
                 padding: 8px;
             }
 
             [data-testid="stDataFrame"] td:last-child {
-                width: 20%;
+                width: 10%;
                 text-align: center !important;
                 padding: 8px;
             }
@@ -428,8 +428,6 @@ if st.session_state.genre_selected:
             }
         </style>
         """, unsafe_allow_html=True)
-
-
 
         # Display the dataframe with custom formatting
         st.write("### 🎬 Top 10 Recommended Movies")

@@ -313,34 +313,93 @@ if st.session_state.genre_selected:
         # st.write(df_recommendations[['title', 'predicted_rating']].head(10).to_string(index=False))
         # st.dataframe(df_recommendations[['title', 'predicted_rating']].head(10), use_container_width=True)
 
-        # Add custom CSS for table styling
+        ## Add custom CSS for table styling
+        #st.markdown("""
+        #<style>
+        #    /* Center the column headers */
+        #    [data-testid="stDataFrame"] th {
+        #        text-align: center !important;
+        #    }
+#
+        #    /* Center the predicted rating values */
+        #    [data-testid="stDataFrame"] td:nth-child(2) {
+        #        text-align: center !important;
+        #    }
+#
+        #    /* Add some padding and borders */
+        #    [data-testid="stDataFrame"] table {
+        #        width: 100%;
+        #        border-collapse: collapse;
+        #    }
+#
+        #    [data-testid="stDataFrame"] td, [data-testid="stDataFrame"] th {
+        #        padding: 8px;
+        #        border: 1px solid #ddd;
+        #    }
+        #</style>
+        #""", unsafe_allow_html=True)
+#
+        ## Display the dataframe with custom column names and styling
+        #st.write("Top 10 Recommended Movies:")
+        #df_display = df_recommendations[['title', 'predicted_rating']].head(10).copy()
+        #df_display.columns = ['Movie Title', 'Rating']  # Rename columns for display
+        #st.dataframe(df_display, use_container_width=True, hide_index=True)
+
+        # Add custom CSS for enhanced table styling
         st.markdown("""
         <style>
-            /* Center the column headers */
-            [data-testid="stDataFrame"] th {
-                text-align: center !important;
+            /* Style the table container */
+            [data-testid="stDataFrame"] {
+                width: 100%;
+                font-family: Arial, sans-serif;
+                margin: 1rem 0;
             }
 
-            /* Center the predicted rating values */
+            /* Style the headers */
+            [data-testid="stDataFrame"] th {
+                text-align: center !important;
+                background-color: #f0f2f6;
+                color: #0e1117;
+                font-weight: bold;
+                padding: 12px 8px;
+                border: 1px solid #ddd;
+            }
+
+            /* Style the cells */
+            [data-testid="stDataFrame"] td {
+                padding: 10px 8px;
+                border: 1px solid #ddd;
+            }
+
+            /* Center rating column */
             [data-testid="stDataFrame"] td:nth-child(2) {
                 text-align: center !important;
             }
 
-            /* Add some padding and borders */
-            [data-testid="stDataFrame"] table {
-                width: 100%;
-                border-collapse: collapse;
+            /* Hover effect on rows */
+            [data-testid="stDataFrame"] tr:hover {
+                background-color: #f5f5f5;
             }
 
-            [data-testid="stDataFrame"] td, [data-testid="stDataFrame"] th {
-                padding: 8px;
-                border: 1px solid #ddd;
+            /* Alternating row colors */
+            [data-testid="stDataFrame"] tr:nth-child(even) {
+                background-color: #fafafa;
             }
         </style>
         """, unsafe_allow_html=True)
 
-        # Display the dataframe with custom column names and styling
-        st.write("Top 10 Recommended Movies:")
+        # Display the dataframe with custom formatting
+        st.write("### 🎬 Top 10 Recommended Movies")
         df_display = df_recommendations[['title', 'predicted_rating']].head(10).copy()
-        df_display.columns = ['Movie Title', 'Rating']  # Rename columns for display
-        st.dataframe(df_display, use_container_width=True, hide_index=True)
+        df_display.columns = ['Movie Title', 'Rating']
+
+        # Format the rating values
+        df_display['Rating'] = df_display['Rating'].apply(lambda x: f"{x:.1f} ⭐")
+
+        # Display the styled dataframe
+        st.dataframe(
+            df_display,
+            use_container_width=True,
+            hide_index=True,
+            height=400
+        )

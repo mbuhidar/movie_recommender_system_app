@@ -387,52 +387,49 @@ if st.session_state.genre_selected:
         #    }
         #</style>
         #""", unsafe_allow_html=True)
-        #st.markdown("""
+
+        st.markdown("""
         <style>
             /* Style the table container */
             [data-testid="stDataFrame"] {
                 width: 100%;
                 font-family: Arial, sans-serif;
-                margin: 1rem 0;
+                margin: 1rem 0;     /* This line is correct but needs to be part of complete CSS block */
             }
 
             /* Style the headers with specific widths */
             [data-testid="stDataFrame"] th:first-child {
-                width: 80% !important;  /* Movie title column width */
+                width: 80% !important;
             }
 
             [data-testid="stDataFrame"] th:last-child {
-                width: 20% !important;  /* Rating column width */
+                width: 20% !important;
             }
 
             /* Style the cells */
             [data-testid="stDataFrame"] td:first-child {
-                width: 80%;  /* Movie title column width */
+                width: 80%;
+                padding: 8px;
             }
 
             [data-testid="stDataFrame"] td:last-child {
-                width: 20%;  /* Rating column width */
+                width: 20%;
                 text-align: center !important;
+                padding: 8px;
             }
 
-            /* Rest of your existing styles */
+            /* Additional styling */
             [data-testid="stDataFrame"] th {
                 background-color: #f0f2f6;
                 color: #0e1117;
                 font-weight: bold;
-                padding: 12px 8px;
+                padding: 8px;
                 border: 1px solid #ddd;
-            }
-
-            [data-testid="stDataFrame"] tr:hover {
-                background-color: #f5f5f5;
-            }
-
-            [data-testid="stDataFrame"] tr:nth-child(even) {
-                background-color: #fafafa;
             }
         </style>
         """, unsafe_allow_html=True)
+
+
 
         # Display the dataframe with custom formatting
         st.write("### 🎬 Top 10 Recommended Movies")

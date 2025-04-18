@@ -141,11 +141,11 @@ if st.session_state.genre_selected:
         # Create pagination controls
         col1, col2, col3 = st.columns([2, 4, 2])
         with col1:
-            if st.form_submit_button("Previous") and st.session_state.page_number > 0:
+            if st.form_submit_button("Previous Page") and st.session_state.page_number > 0:
                 st.session_state.page_number -= 1
                 st.rerun()
         with col2:
-            if st.form_submit_button("Next") and st.session_state.page_number < total_pages - 1:
+            if st.form_submit_button("Next Page") and st.session_state.page_number < total_pages - 1:
                 st.session_state.page_number += 1
                 st.rerun()
         with col3:

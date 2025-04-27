@@ -303,10 +303,10 @@ if st.session_state.genre_selected:
         # Create boolean mask of movies NOT in rated_movie_ids
         mask = ~df_recommendations['movieId'].isin(rated_movie_ids)
         # print("Mask:", mask)
-        # print("Filtered Recommendations:", df_recommendations[mask])
+        print("Filtered Recommendations:", df_recommendations[mask])
         # mask = ~df_recommendations['movieId'].isin(df_new_user_ratings['movieId'].values)
         # Apply mask to keep only unrated movies
-        df_recommendations[mask]
+        df_recommendations = df_recommendations[mask]
         df_recommendations = df_recommendations.sort_values(by='predicted_rating', ascending=False)
 
         # Convert predicted ratings to 1 decimal place

@@ -3,7 +3,9 @@ import torch
 import torch.nn as nn
 import pandas as pd
 import numpy as np
-from streamlit_super_slider import st_slider
+
+# super-slider did not register ratings when using slider feature
+# from streamlit_super_slider import st_slider
 
 # Title
 st.title("Movie Recommendation System")
@@ -32,7 +34,6 @@ if genre_submit_button:
     st.session_state.genre_selected = True
     st.session_state.selected_genre = genre
     st.session_state.page_number = 0
-    st.session_state.ratings = {}
 
 # Step 4: Only display the ratings form if a genre is selected
 if st.session_state.genre_selected:
@@ -51,10 +52,6 @@ if st.session_state.genre_selected:
     movies_list = movies_list.sort_values(by='num_ratings', ascending=False)
     movies_to_rate = movies_list[['movieId', 'title']].copy()
     movies_to_rate.rename(columns={"movieId": "Movie ID", "title": "Movie Title"}, inplace=True)
-
-    # Initialize session state for ratings
-    if "ratings" not in st.session_state:
-        st.session_state.ratings = {}
 
     # Ratings form
     with st.form(key='ratings_form'):
@@ -108,6 +105,7 @@ if st.session_state.genre_selected:
             st.session_state.page_number = 0
         if "ratings" not in st.session_state:
             st.session_state.ratings = {}
+        print("Session State Ratings:", st.session_state.ratings)
 
         # Constants for pagination
         MOVIES_PER_PAGE = 5
@@ -128,31 +126,45 @@ if st.session_state.genre_selected:
             with col1:
                 st.markdown(f'<div class="movie-title">{movie_title}</div>', unsafe_allow_html=True)
             with col2:
-                st.session_state.ratings[movie_id] = st_slider(
-                    values={0: 'nr', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 
-                           6: '6', 7: '7', 8: '8', 9: '9', 10: '10'},
+                # Create a slider for each movie
+                slider_value = st.slider(
+                    label="",  # hide the movie title; use movie_title to show
                     min_value=0,
                     max_value=10,
-                    dots=True,
-                    steps=1,
-                    key=f"slider_{movie_id}"
+                    value=0,
+                    step=1,
+                    key=movie_id,
+                    format="%d",
+                    help=""  # "Rate the movie from 1 to 10, where 1 means you don't like it at all and 10 means you love it!  Note: Leaving a rating at 0 means you don't want to include that movie in the ratings.",
                 )
 
+                # super-slider did not register ratings when using slider feature
+                # Implement a custom slider using st_slider for super-slider
+                # slider_key = f"slider_{movie_id}"
+                # slider_value = st_slider(
+                #     values={0: 'nr', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 
+                #             6: '6', 7: '7', 8: '8', 9: '9', 10: '10'},
+                #     min_value=0,
+                #     max_value=10,
+                #     dots=True,
+                #     steps=1,
+                #     key=slider_key
+                # )
+
+            st.session_state.ratings[movie_id] = slider_value
+
         # Create pagination controls
-        col1, col2, col3 = st.columns([2, 4, 2])
-        with col1:
+        b_col1, b_col2, b_col3 = st.columns([2, 4, 2])
+        with b_col1:
             if st.form_submit_button("Previous Page") and st.session_state.page_number > 0:
                 st.session_state.page_number -= 1
                 st.rerun()
-        with col2:
+        with b_col2:
             if st.form_submit_button("Next Page") and st.session_state.page_number < total_pages - 1:
                 st.session_state.page_number += 1
                 st.rerun()
-        with col3:
+        with b_col3:
             ratings_submit_button = st.form_submit_button("Submit Ratings")
-
-        # Submit button for the ratings form
-        # ratings_submit_button = st.form_submit_button(label='Submit Ratings')
 
     # Step 5: Process ratings submission
     if ratings_submit_button:
@@ -163,23 +175,13 @@ if st.session_state.genre_selected:
             if rating > 0
         }
 
-        # Display the collected ratings
-        # st.write("Your Ratings:")
-        # st.write(filtered_ratings)
-
         # Convert filtered_ratings to the desired format
         new_user_ratings = {
             'movieId': list(filtered_ratings.keys()),
             'rating': list(filtered_ratings.values())
         }
 
-        # Display the collected ratings
-        # st.write("Your Ratings:")
-        # st.write(new_user_ratings)
-        # print("Your Ratings:")
-        # print(new_user_ratings)
-
-# Inference and recommendation
+    # Inference and recommendation
 
         # Define model class identical to the one used in training
         class RecSysModel(nn.Module):
@@ -245,14 +247,7 @@ if st.session_state.genre_selected:
         
             return top_k_predictions, top_k_indices
         
-        # Define ratings for a new user and generate recommendations
-        
         # Define ratings for a new user to be used for recommendations
-        
-        # new_user_ratings = {
-        #     'movieId': [4896, 5816, 8368, 40815, 54001, 69844, 318], # Harry Potter Movies
-        #     'rating': [5, 5, 5, 5, 5, 5, 0]
-        # }
         
         # Convert the new user ratings to a DataFrame
         df_new_user_ratings = pd.DataFrame(new_user_ratings)
@@ -296,22 +291,15 @@ if st.session_state.genre_selected:
         df_recommendations = df_recommendations.merge(df_movies, on='movieId', how='left')
 
         # Filter out movies that the user has already rated
-
         # Convert encoded movie IDs back to original IDs
         rated_movie_ids = lbl_movie_loaded.inverse_transform(df_new_user_ratings['movieId'].values)
 
         # Create boolean mask of movies NOT in rated_movie_ids
         mask = ~df_recommendations['movieId'].isin(rated_movie_ids)
-        # print("Mask:", mask)
-        # print("Filtered Recommendations:", df_recommendations[mask])
-        # mask = ~df_recommendations['movieId'].isin(df_new_user_ratings['movieId'].values)
+
         # Apply mask to keep only unrated movies
         df_recommendations = df_recommendations[mask]
         df_recommendations = df_recommendations.sort_values(by='predicted_rating', ascending=False)
-
-        # Convert predicted ratings to 1 decimal place
-        # df_recommendations['predicted_rating'] = df_recommendations['predicted_rating'].astype(float)
-        # df_recommendations['predicted_rating'] = df_recommendations['predicted_rating'].round(1)
 
         # If the selected genre is 'All Genres', no need to filter by genre
         if st.session_state.selected_genre == 'All Genres':
